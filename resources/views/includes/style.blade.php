@@ -17,3 +17,5 @@
     width: 100%;
   }
 </style>
+
+<link rel="shortcut icon" href="{{ url('assets/images/favicon.svg') }}" type="image/x-icon">
