@@ -14,7 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all();
+        return view('employees', ['users' => $users]);
     }
 
     /**
@@ -35,7 +36,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = request()->validate([
+                'name' => 'required|max:50',
+                'position' => 'required|in:ADMIN,HRD,EMPLOYEE',
+            ]);
+    
+            User::create($data);
+    
+            return redirect()->route('employees')->with('success', 'Employee added successfully!');
+        } catch (\Throwable $th) {
+            return redirect()->route('employees')->with('error', 'Failed to add employee!');
+        }
     }
 
     /**
