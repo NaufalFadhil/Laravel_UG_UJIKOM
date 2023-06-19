@@ -44,7 +44,6 @@ class EmployeeController extends Controller
                 'position' => 'required|in:MANAGER,SUPERVISOR,STAFF',
                 'gender' => 'required|in:MALE,FEMALE',
                 'email' => 'required|email|unique:employees',
-                'phone' => 'numeric',
                 'address' => 'max:100',
             ]);
     

@@ -27,8 +27,7 @@ Route::get('/dashboard', function () {
 Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
 
-Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
-Route::post('/payroll', [PayrollController::class, 'store'])->name('payroll.store');
+Route::resource('payroll', PayrollController::class);
 
 Route::get('/payroll-configuration', [ParameterController::class, 'index'])->name('parameter.index');
 Route::post('/payroll-configuration', [ParameterController::class, 'store'])->name('parameter.store');
