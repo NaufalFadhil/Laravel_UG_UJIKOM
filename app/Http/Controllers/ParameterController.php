@@ -38,19 +38,23 @@ class ParameterController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'position' => 'required|max:10|unique:parameters|in:MANAGER,SUPERVISOR,STAFF',
-            'bonus_percentage' => 'required|numeric',
-            'pph_percentage' => 'required|numeric',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->route('parameter.index')->with('error', $validator->errors()->first());
+        try {
+            $validator = Validator::make($request->all(), [
+                'position' => 'required|max:10|unique:parameters|in:MANAGER,SUPERVISOR,STAFF',
+                'bonus_percentage' => 'required|numeric',
+                'pph_percentage' => 'required|numeric',
+            ]);
+    
+            if ($validator->fails()) {
+                return redirect()->route('payroll-configuration.index')->with('error', $validator->errors()->first());
+            }
+    
+            Parameter::create($request->all());
+    
+            return redirect()->route('payroll-configuration.index')->with('success', 'Parameter added successfully!');
+        } catch (\Throwable $th) {
+            return redirect()->route('payroll-configuration.index')->with('error', $th->getMessage());
         }
-
-        Parameter::create($request->all());
-
-        return redirect()->route('parameter.index')->with('success', 'Parameter added successfully!');
     }
 
     /**
@@ -72,7 +76,13 @@ class ParameterController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+            $parameter = Parameter::findOrFail($id);
+
+            return view('pages.parameter.edit', ['parameter' => $parameter]);
+        } catch (\Throwable $th) {
+            return redirect()->route('payroll-configuration.index')->with('error', $th->getMessage());
+        }
     }
 
     /**
@@ -84,7 +94,13 @@ class ParameterController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            Parameter::findOrFail($id)->update($request->all());
+
+            return redirect()->route('payroll-configuration.index')->with('success', 'Parameter updated successfully!');
+        } catch (\Throwable $th) {
+            return redirect()->route('payroll-configuration.index')->with('error', $th->getMessage());
+        }
     }
 
     /**
@@ -95,6 +111,12 @@ class ParameterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            Parameter::destroy($id);
+
+            return redirect()->route('payroll-configuration.index')->with('success', 'Parameter deleted successfully!');
+        } catch (\Throwable $th) {
+            return redirect()->route('payroll-configuration.index')->with('error', $th->getMessage());
+        }
     }
 }

@@ -6,7 +6,6 @@
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Payroll Configuration</h3>
-                <p class="text-subtitle text-muted"></p>
             </div>
         </div>
     </div>
@@ -46,9 +45,9 @@
                                 <td>{{ $parameter->bonus_percentage . '%' }}</td>
                                 <td>{{ $parameter->pph_percentage . '%' }}</td>
                                 <td>
-                                    <a href="{{ url('employees', $parameter->id) }}" class="btn btn-info"><i class="bi-pencil"></i></a>
-                                    <form action="{{ url('employees' . $parameter->id) }}" method="post" class="d-inline">
-                                        @method('delete')
+                                    <a href="{{ route('payroll-configuration.edit', $parameter->id) }}" class="btn btn-info"><i class="bi-pencil"></i></a>
+                                    <form action="{{ route('payroll-configuration.destroy', $parameter->id) }}" method="POST" class="d-inline">
+                                        @method('DELETE')
                                         @csrf
                                         <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus {{ $parameter->name }}')">
                                             <i class="bi-trash-fill"></i>
@@ -81,7 +80,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('parameter.store') }}" method="POST">
+                    <form action="{{ route('payroll-configuration.store') }}" method="POST">
                         @csrf
                         <div class="form-group">
                             <label for="position" class="col-form-label">Jabatan:</label>

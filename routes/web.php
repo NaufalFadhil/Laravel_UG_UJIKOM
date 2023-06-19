@@ -24,10 +24,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::resource('employee', EmployeeController::class);
-
 Route::post('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
-Route::resource('payroll', PayrollController::class);
 
-Route::get('/payroll-configuration', [ParameterController::class, 'index'])->name('parameter.index');
-Route::post('/payroll-configuration', [ParameterController::class, 'store'])->name('parameter.store');
+Route::resource('employee', EmployeeController::class);
+Route::resource('payroll', PayrollController::class);
+Route::resource('payroll-configuration', ParameterController::class);
