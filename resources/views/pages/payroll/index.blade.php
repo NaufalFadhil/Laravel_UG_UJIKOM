@@ -126,8 +126,8 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
             role="document">
             <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <h5 class="modal-title white" id="myModalLabel160">Rekam Data Gaji
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title white" id="myModalLabel160">Cetak Data Gaji
                     </h5>
                     <button type="button" class="close" data-bs-dismiss="modal"
                         aria-label="Close">
@@ -145,7 +145,7 @@
                             <label for="date_end" class="col-form-label">Tanggal Terakhir:</label>
                             <input type="date" id="date_end" name="date_end" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Export Data</button>
+                        <button type="submit" class="btn btn-success">Cetak Data</button>
                     </form>
                 </div>
                 <div class="modal-footer">

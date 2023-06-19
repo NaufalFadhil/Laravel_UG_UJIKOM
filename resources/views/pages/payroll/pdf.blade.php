@@ -22,7 +22,7 @@
       <div class="col-md-12">
           <h1 class="text-center">Payroll Report PT. Baroqah TBK</h1>
           <hr>
-          <p class="text-center">From {{ $date_start }} To {{ $date_end }}</p>
+          <p class="text-center">Laporan pada tanggal {{ $date_start }} s.d. {{ $date_end }}</p>
           @php
               $total_amount = 0;
           @endphp
