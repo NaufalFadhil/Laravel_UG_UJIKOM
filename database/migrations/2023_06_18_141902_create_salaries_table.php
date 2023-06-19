@@ -16,7 +16,7 @@ class CreateSalariesTable extends Migration
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
             $table->string('employee_nip', 8);
-            $table->foreign('employee_nip')->references('nip')->on('employees');
+            $table->foreign('employee_nip')->references('nip')->on('employees')->onUpdate('cascade');
             $table->integer('salary');
             $table->integer('bonus');
             $table->integer('amount');

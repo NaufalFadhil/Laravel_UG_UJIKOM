@@ -5,16 +5,7 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>DataTable</h3>
-                <p class="text-subtitle text-muted">For user to check they list</p>
-            </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">DataTable</li>
-                    </ol>
-                </nav>
+                <h3>Data Karyawan</h3>
             </div>
         </div>
     </div>
@@ -57,8 +48,8 @@
                                 <td>{{ $employee->position }}</td>
                                 <td>{{ $employee->email }}</td>
                                 <td>
-                                    <a href="{{ url('employees', $employee->id) }}" class="btn btn-info"><i class="bi-pencil"></i></a>
-                                    <form action="{{ url('employees' . $employee->id) }}" method="post" class="d-inline">
+                                    <a href="{{ route('employee.edit', $employee->nip) }}" class="btn btn-info"><i class="bi-pencil"></i></a>
+                                    <form action="{{ route('employee.destroy', $employee->nip) }}" method="post" class="d-inline">
                                         @method('delete')
                                         @csrf
                                         <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus {{ $employee->name }}')">
@@ -92,10 +83,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('employees') }}" method="POST">
+                    <form action="{{ route('employee.store') }}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <label for="nip" class="col-form-label">NIP* :</label>
+                            <label for="nip" class="col-form-label">Nomor Induk Pegawai (NIP)* :</label>
                             <input type="text" class="form-control" id="nip" name="nip" required>
                         </div>
                         <div class="form-group">

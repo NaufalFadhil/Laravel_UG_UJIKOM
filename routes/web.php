@@ -17,15 +17,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/employees');
+    return redirect('/employee');
 })->name('root');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
-route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+Route::resource('employee', EmployeeController::class);
 
 Route::post('/payroll/export', [PayrollController::class, 'export'])->name('payroll.export');
 Route::resource('payroll', PayrollController::class);

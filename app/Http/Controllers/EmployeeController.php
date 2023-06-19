@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Salary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,14 +49,14 @@ class EmployeeController extends Controller
             ]);
     
             if ($validator->fails()) {
-                return redirect()->route('employees.index')->with('error', $validator->errors()->first());
+                return redirect()->route('employee.index')->with('error', $validator->errors()->first());
             }
     
             Employee::create($request->all());
     
-            return redirect()->route('employees.index')->with('success', 'Employee added successfully!');
+            return redirect()->route('employee.index')->with('success', 'Employee added successfully!');
         } catch (\Throwable $th) {
-            return redirect()->route('employees.index')->with('error', 'Failed to add employee! ' . $th->getMessage());
+            return redirect()->route('employee.index')->with('error', 'Failed to add employee! ' . $th->getMessage());
         }
     }
 
@@ -76,9 +77,14 @@ class EmployeeController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        //
+        try {
+            $employee = Employee::where('nip', $id)->firstOrFail();
+            return view('pages.employee.edit', ['employee' => $employee]);
+        } catch (\Throwable $th) {
+            return redirect()->route('employee.index')->with('error', 'Failed to edit employee! ' . $th->getMessage());
+        }
     }
 
     /**
@@ -88,9 +94,52 @@ class EmployeeController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $nip_validation = 'required|numeric|unique:employees';
+            $email_validation = 'required|email|unique:employees';
+            $employee = Employee::where('nip', $id)->firstOrFail();
+            
+            if ($request->nip == $id) {
+                $nip_validation = 'required|numeric';
+            }
+
+            if ($request->email == $employee->email) {
+                $email_validation = 'required|email';
+            }
+
+            $validator = Validator::make($request->all(), [
+                'nip' => $nip_validation,
+                'name' => 'required|max:50',
+                'position' => 'required|in:MANAGER,SUPERVISOR,STAFF',
+                'gender' => 'required|in:MALE,FEMALE',
+                'email' => $email_validation,
+                'address' => 'max:100',
+            ]);
+    
+            if ($validator->fails()) {
+                return redirect()->route('employee.index')->with('error', $validator->errors()->first());
+            }
+
+            Employee::where('nip', $id)->update([
+                'nip' => $request->nip,
+                'name' => $request->name,
+                'position' => $request->position,
+                'gender' => $request->gender,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+            ]);
+
+            Salary::where('employee_nip', $id)->update([
+                'employee_nip' => $request->nip,
+            ]);
+
+            return redirect()->route('employee.index')->with('success', 'Employee updated successfully!');
+        } catch (\Throwable $th) {
+            return redirect()->route('employee.index')->with('error', 'Failed to update employee! ' . $th->getMessage());
+        }
     }
 
     /**
@@ -99,8 +148,16 @@ class EmployeeController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        try {
+            Employee::where('nip', $id)->delete();
+            return redirect()->route('employee.index')->with('success', 'Employee deleted successfully!');
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('employee.index')->with('error', 'Failed to delete employee! Employee has salary data!');
+            }
+            return redirect()->route('employee.index')->with('error', 'Failed to delete employee! ' . $th->getMessage());
+        }
     }
 }

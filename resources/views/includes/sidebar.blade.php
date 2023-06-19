@@ -21,8 +21,8 @@
                       <span>Dashboard</span>
                   </a>
               </li> --}}
-              <li class="sidebar-item {{ Request::is('employees') ? 'active' : '' }}">
-                  <a href="{{ route('employees.index') }}" class='sidebar-link'>
+              <li class="sidebar-item {{ Request::is('employee') ? 'active' : '' }}">
+                  <a href="{{ route('employee.index') }}" class='sidebar-link'>
                       <i class="bi bi-grid-fill"></i>
                       <span>Karyawan</span>
                   </a>
