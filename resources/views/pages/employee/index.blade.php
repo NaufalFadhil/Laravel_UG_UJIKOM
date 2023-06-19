@@ -18,6 +18,19 @@
             </div>
         </div>
     </div>
+
+    @if (session()->has('success'))
+        <div class="alert alert-success" role="alert">
+            <p class="mb-0">{{ session()->get('success') }}</p>
+        </div>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="alert alert-danger" role="alert">
+            <p class="mb-0">{{ session()->get('error') }}</p>
+        </div>
+    @endif
+
     <section class="section">
         <div class="card">
             <div class="card-header">
@@ -29,22 +42,26 @@
                 <table class="table table-striped" id="table">
                     <thead>
                         <tr>
+                            <th>NIP</th>
                             <th>Nama</th>
                             <th>Jabatan</th>
+                            <th>Email</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($employees as $employee)
                             <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->position }}</td>
+                                <td>{{ $employee->nip }}</td>
+                                <td>{{ $employee->name }}</td>
+                                <td>{{ $employee->position }}</td>
+                                <td>{{ $employee->email }}</td>
                                 <td>
-                                    <a href="{{ url('employees', $user->id) }}" class="btn btn-info"><i class="bi-pencil"></i></a>
-                                    <form action="{{ url('employees' . $user->id) }}" method="post" class="d-inline">
+                                    <a href="{{ url('employees', $employee->id) }}" class="btn btn-info"><i class="bi-pencil"></i></a>
+                                    <form action="{{ url('employees' . $employee->id) }}" method="post" class="d-inline">
                                         @method('delete')
                                         @csrf
-                                        <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus {{ $user->name }}')">
+                                        <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus {{ $employee->name }}')">
                                             <i class="bi-trash-fill"></i>
                                         </button>
                                     </form>
@@ -78,17 +95,41 @@
                     <form action="{{ url('employees') }}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <label for="name" class="col-form-label">Nama:</label>
+                            <label for="nip" class="col-form-label">NIP* :</label>
+                            <input type="text" class="form-control" id="nip" name="nip" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">Nama* :</label>
                             <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label for="position" class="col-form-label">Jabatan:</label>
+                            <label for="position" class="col-form-label">Jabatan* :</label>
                             <select class="form-select" id="position" name="position" required>
                                 <option value="">Pilih Jabatan</option>
-                                <option value="ADMIN">Admin</option>
-                                <option value="HRD">HRD</option>
-                                <option value="EMPLOYEE">Karyawan</option>
+                                <option value="MANAGER">Manager</option>
+                                <option value="SUPERVISOR">Supervisor</option>
+                                <option value="STAFF">Staff</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender" class="col-form-label">Jenis Kelamin* :</label> 
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="MALE">Laki-laki</option>
+                                <option value="FEMALE">Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-form-label">Email* :</label>
+                            <input type="text" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-form-label">Nomor HP :</label>
+                            <input type="text" class="form-control" id="phone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="col-form-label">Alamat :</label>
+                            <input type="text" class="form-control" id="address" name="address">
                         </div>
                         <button type="submit" class="btn btn-primary">Tambah Karyawan</button>
                     </form>

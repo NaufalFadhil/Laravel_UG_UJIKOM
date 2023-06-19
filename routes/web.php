@@ -24,7 +24,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
 
 Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');

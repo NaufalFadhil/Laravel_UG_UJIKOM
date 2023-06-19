@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class EmployeeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('employees', ['users' => $users]);
+        $employees = Employee::all();
+        return view('pages.employee.index', ['employees' => $employees]);
     }
 
     /**
@@ -37,16 +38,25 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = request()->validate([
+            $validator = Validator::make($request->all(), [
+                'nip' => 'required|numeric|unique:employees',
                 'name' => 'required|max:50',
-                'position' => 'required|in:ADMIN,HRD,EMPLOYEE',
+                'position' => 'required|in:MANAGER,SUPERVISOR,STAFF',
+                'gender' => 'required|in:MALE,FEMALE',
+                'email' => 'required|email|unique:employees',
+                'phone' => 'numeric',
+                'address' => 'max:100',
             ]);
     
-            User::create($data);
+            if ($validator->fails()) {
+                return redirect()->route('employees.index')->with('error', $validator->errors()->first());
+            }
     
-            return redirect()->route('employees')->with('success', 'Employee added successfully!');
+            Employee::create($request->all());
+    
+            return redirect()->route('employees.index')->with('success', 'Employee added successfully!');
         } catch (\Throwable $th) {
-            return redirect()->route('employees')->with('error', 'Failed to add employee!');
+            return redirect()->route('employees.index')->with('error', 'Failed to add employee! ' . $th->getMessage());
         }
     }
 
