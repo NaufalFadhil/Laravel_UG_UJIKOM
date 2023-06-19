@@ -8,6 +8,8 @@ use App\Models\Salary;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use Dompdf\Dompdf;
+
 class PayrollController extends Controller
 {
     /**
@@ -135,6 +137,27 @@ class PayrollController extends Controller
             return redirect()->route('payroll.index')->with('success', 'Payroll deleted successfully!');
         } catch (\Throwable $th) {
             return redirect()->route('payroll.index')->with('error', 'Payroll deleted failed!' . $th->getMessage());
+        }
+    }
+
+    public function export(Request $request) {
+        try {
+            $payrolls = Employee::join('salaries', 'employees.nip', '=', 'salaries.employee_nip', 'right')
+                ->select('employees.nip', 'employees.name', 'employees.position',  'salaries.id as salary_id', 'salaries.salary', 'salaries.bonus', 'salaries.amount', 'salaries.date')
+                ->where('salaries.date', '>=', $request->date_start)
+                ->where('salaries.date', '<=', $request->date_end)
+                ->get();
+
+            $pdf = new Dompdf();
+            $pdf->loadHtml(view('pages.payroll.pdf', ['payrolls' => $payrolls, 'date_start' => $request->date_start, 'date_end' => $request->date_end]));
+            $pdf->setPaper('A4', 'landscape');
+            $pdf->render();
+            $pdf->stream('payroll.pdf', ['Attachment' => false]);
+
+            return $pdf->stream();
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->route('payroll.index')->with('error', 'Payroll export failed!' . $th->getMessage());
         }
     }
 }

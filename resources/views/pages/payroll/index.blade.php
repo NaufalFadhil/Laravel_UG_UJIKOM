@@ -27,6 +27,9 @@
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#primary">
                     Rekam Data Gaji
                 </button>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-export">
+                    Cetak Laporan Gaji
+                </button>
             </div>
             <div class="card-body">
                 <table class="table table-striped" id="table">
@@ -106,6 +109,43 @@
                             <input type="date" id="date" name="date" class="form-control" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Hitung dan Tambah</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary"
+                        data-bs-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Tutup</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade text-left" id="modal-export" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+            role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title white" id="myModalLabel160">Rekam Data Gaji
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('payroll.export') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label for="date_start" class="col-form-label">Tanggal Pertama:</label>
+                            <input type="date" id="date_start" name="date_start" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date_end" class="col-form-label">Tanggal Terakhir:</label>
+                            <input type="date" id="date_end" name="date_end" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Export Data</button>
                     </form>
                 </div>
                 <div class="modal-footer">
