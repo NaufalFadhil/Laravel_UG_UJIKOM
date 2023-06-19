@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\ParameterController;
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,13 +17,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/dashboard');
+    return redirect('/employees');
 })->name('root');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/employees', [UserController::class, 'index'])->name('employees');
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
+route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
 
-route::post('/employees', [UserController::class, 'store'])->name('employees.store');
+Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
+Route::post('/payroll', [PayrollController::class, 'store'])->name('payroll.store');
+
+Route::get('/payroll-configuration', [ParameterController::class, 'index'])->name('parameter.index');
+Route::post('/payroll-configuration', [ParameterController::class, 'store'])->name('parameter.store');
