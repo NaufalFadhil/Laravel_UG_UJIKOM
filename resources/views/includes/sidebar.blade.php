@@ -21,19 +21,19 @@
                       <span>Dashboard</span>
                   </a>
               </li> --}}
-              <li class="sidebar-item {{ Request::is('employee') ? 'active' : '' }}">
+              <li class="sidebar-item {{ Request::routeIs('employee.*') ? 'active' : '' }}">
                   <a href="{{ route('employee.index') }}" class='sidebar-link'>
                       <i class="bi bi-grid-fill"></i>
                       <span>Karyawan</span>
                   </a>
               </li>
-              <li class="sidebar-item {{ Request::is('payroll') ? 'active' : '' }}">
+              <li class="sidebar-item {{ Request::routeIs('payroll.*') ? 'active' : '' }}">
                   <a href="{{ url('/payroll') }}" class='sidebar-link'>
                       <i class="bi bi-grid-fill"></i>
                       <span>Laporan Gaji</span>
                   </a>
               </li>
-              <li class="sidebar-item {{ Request::is('payroll-configuration') ? 'active' : '' }}">
+              <li class="sidebar-item {{ Request::routeIs('payroll-configuration.*') ? 'active' : '' }}">
                   <a href="{{ url('/payroll-configuration') }}" class='sidebar-link'>
                       <i class="bi bi-grid-fill"></i>
                       <span>Konfigurasi Bonus & PPh</span>

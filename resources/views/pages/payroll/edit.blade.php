@@ -19,7 +19,7 @@
                     <div class="form-group">
                         <label for="employee_nip" class="col-form-label">Karyawan:</label>
                         <select class="form-select" id="employee_nip" name="employee_nip" required>
-                            <option value="" disabled>Pilih Karyawan</option>
+                            <option value="">Pilih Karyawan</option>
                             @foreach ($employees as $employee)
                                 <option value="{{ $employee->nip }}" @if ($employee->nip == $payroll->nip) selected @endif>{{ $employee->name}} ({{ $employee->nip }})</option>
                             @endforeach
