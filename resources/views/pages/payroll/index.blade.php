@@ -37,6 +37,7 @@
                         <tr>
                             <th>NIP</th>
                             <th>Nama</th>
+                            <th>Jabatan</th>
                             <th>Gaji Pokok</th>
                             <th>Bonus</th>
                             <th>Gaji Bersih</th>
@@ -49,16 +50,18 @@
                             <tr>
                                 <td>{{ $payroll->nip }}</td>
                                 <td>{{ $payroll->name }}</td>
-                                <td>{{ $payroll->salary }}</td>
-                                <td>{{ $payroll->bonus }}</td>
-                                <td>{{ $payroll->amount }}</td>
+                                <td>{{ Str::title($payroll->position) }}</td>
+                                <td>@currency($payroll->salary)</td>
+                                <td>@currency($payroll->bonus)</td>
+                                <td>@currency($payroll->amount)</td>
                                 <td>{{ $payroll->date }}</td>
                                 <td>
-                                    <a href="{{ route('payroll.edit', $payroll->salary_id)  }}" class="btn btn-info"><i class="bi-pencil"></i></a>
+                                    <a href="{{ route('payroll.show', $payroll->salary_id)  }}" class="btn btn-success" title="Print Slip Gaji"><i class="bi-file-text"></i></a>
+                                    <a href="{{ route('payroll.edit', $payroll->salary_id)  }}" class="btn btn-info" title="Ubah Gaji"><i class="bi-pencil"></i></a>
                                     <form action="{{ route('payroll.destroy', $payroll->salary_id)  }}" method="POST" class="d-inline">
                                         @method('DELETE')
                                         @csrf
-                                        <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus {{ $payroll->name }}')">
+                                        <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin ingin menghapus {{ $payroll->name }}')" title="Hapus Gaji">
                                             <i class="bi-trash-fill"></i>
                                         </button>
                                     </form>

@@ -11,7 +11,7 @@
       border-collapse: collapse;
     }
 
-    td, h1, p {
+    td, h1 {
       text-align: center;
     }
   </style>
@@ -22,9 +22,11 @@
       <div class="col-md-12">
           <h1 class="text-center">Payroll Report PT. Baroqah TBK</h1>
           <hr>
-          <p class="text-center">Laporan pada tanggal {{ $date_start }} s.d. {{ $date_end }}</p>
+          <p>Laporan pada tanggal {{ $date_start }} s.d. {{ $date_end }}
+          <br>Laporan dibuat pada tanggal {{ date('Y-m-d') }}</p>
           @php
               $total_amount = 0;
+              $total_tax = 0;
           @endphp
           <table class="table table-bordered table-hover" width="100%">
               <thead>
@@ -34,6 +36,7 @@
                       <th>Jabatan</th>
                       <th>Gaji Pokok</th>
                       <th>Bonus</th>
+                      <th>Pajak</th>
                       <th>Gaji Bersih</th>
                       <th>Tanggal Pembayaran</th>
                   </tr>
@@ -44,20 +47,23 @@
                         <td>{{ $payroll->nip }}</td>
                           <td>{{ $payroll->name }}</td>
                           <td>{{ Str::title($payroll->position) }}</td>
-                          <td>{{ $payroll->salary }}</td>
-                          <td>{{ $payroll->bonus }}</td>
-                          <td>{{ $payroll->amount }}</td>
+                          <td>@currency($payroll->salary)</td>
+                          <td>@currency($payroll->bonus)</td>
+                          <td>( @currency(($payroll->salary + $payroll->bonus) - $payroll->amount) )</td>
+                          <td>@currency($payroll->amount)</td>
                           <td>{{ $payroll->date }}</td>
                       </tr>
                       @php
                           $total_amount += $payroll->amount;
+                          $total_tax += ($payroll->salary + $payroll->bonus) - $payroll->amount;
                       @endphp
                   @endforeach
               </tbody>
               <tfoot>
                   <tr>
                       <th colspan="5" class="text-center">Total</th>
-                      <th>{{ $total_amount }}</th>
+                      <th>@currency($total_tax)</th>
+                      <th>@currency($total_amount)</th>
                       <th>{{ $date_start }} - {{ $date_end }}</th>
                   </tr>
           </table>

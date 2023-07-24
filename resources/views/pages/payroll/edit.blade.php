@@ -29,6 +29,10 @@
                         <label for="salary" class="col-form-label">Gaji Pokok:</label>
                         <input type="text" class="form-control" id="salary" name="salary" value="{{ $payroll->salary }}" required>
                     </div>
+                    <div class="form-group">
+                        <label for="date" class="col-form-label">Tanggal Pembayaran:</label>
+                        <input type="date" id="date" name="date" class="form-control" value="{{ $payroll->date }}" required>
+                    </div>
                     <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-primary">Edit Data</button>

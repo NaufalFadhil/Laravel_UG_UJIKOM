@@ -22,7 +22,7 @@ class PayrollController extends Controller
         $employees = Employee::all();
 
         $payrolls = Employee::join('salaries', 'employees.nip', '=', 'salaries.employee_nip', 'right')
-            ->select('employees.nip', 'employees.name', 'salaries.id as salary_id', 'salaries.salary', 'salaries.bonus', 'salaries.amount', 'salaries.date')
+            ->select('employees.nip', 'employees.name', 'employees.position', 'salaries.id as salary_id', 'salaries.salary', 'salaries.bonus', 'salaries.amount', 'salaries.date')
             ->get();
 
         return view('pages.payroll.index', ['payrolls' => $payrolls, 'employees' => $employees]);
@@ -74,9 +74,26 @@ class PayrollController extends Controller
      * @param  \App\Models\Parameter  $parameter
      * @return \Illuminate\Http\Response
      */
-    public function show(Parameter $parameter)
+    public function show($id)
     {
-        //
+        try {
+            $employee = Employee::where('nip', $id)->first();
+
+            $payroll = Employee::join('salaries', 'employees.nip', '=', 'salaries.employee_nip', 'right')
+                ->select('employees.*',  'salaries.id as salary_id', 'salaries.salary', 'salaries.bonus', 'salaries.amount', 'salaries.date')
+                ->where('salaries.id', $id)
+                ->get()->first();
+
+            $pdf = new Dompdf();
+            $pdf->loadHtml(view('pages.payroll.pdf_slip', ['payroll' => $payroll, 'employee' => $employee]));
+            $pdf->setPaper('A4', 'landscape');
+            $pdf->render();
+            $pdf->stream('payroll.pdf', ['Attachment' => false]);
+
+            return $pdf->stream();
+        } catch (\Throwable $th) {
+            return redirect()->route('payroll.index')->with('error', 'Payroll export failed!' . $th->getMessage());
+        }
     }
 
     /**
@@ -90,7 +107,7 @@ class PayrollController extends Controller
         try {
             $employees = Employee::all();
             $payroll = Employee::join('salaries', 'employees.nip', '=', 'salaries.employee_nip', 'right')
-                ->select('employees.nip', 'employees.name', 'salaries.id as salary_id', 'salaries.salary', 'salaries.bonus', 'salaries.amount')
+                ->select('employees.nip', 'employees.name', 'salaries.id as salary_id', 'salaries.salary', 'salaries.bonus', 'salaries.amount', 'salaries.date')
                 ->where('salaries.id', $id)
                 ->get()->first();
 
@@ -122,7 +139,7 @@ class PayrollController extends Controller
                 'salary' => $request->salary,
                 'bonus' => $bonus,
                 'amount' => $salary_total_With_pph,
-                'date' => '2023-06-01',
+                'date' => $request->date,
             ]);
 
             return redirect()->route('payroll.index')->with('success', 'Payroll updated successfully!');
@@ -151,7 +168,7 @@ class PayrollController extends Controller
     public function export(Request $request) {
         try {
             $payrolls = Employee::join('salaries', 'employees.nip', '=', 'salaries.employee_nip', 'right')
-                ->select('employees.nip', 'employees.name', 'employees.position',  'salaries.id as salary_id', 'salaries.salary', 'salaries.bonus', 'salaries.amount', 'salaries.date')
+                ->select('employees.*',  'salaries.id as salary_id', 'salaries.salary', 'salaries.bonus', 'salaries.amount', 'salaries.date')
                 ->where('salaries.date', '>=', $request->date_start)
                 ->where('salaries.date', '<=', $request->date_end)
                 ->get();
